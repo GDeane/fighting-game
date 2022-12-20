@@ -17,35 +17,22 @@ class Sprite {
     this.lastKey
     this.attackBox = {
       position: {
-        x: this.position.x,
-        y: this.position.y
-      },
-      offset: offset,
-      width: 100,
-      height: 50
+        x: this.position.x, y: this.position.y
+      }, offset: offset, width: 100, height: 50
     }
     this.color = color
     this.isAttacking
+    this.health = 100
   }
 
   draw() {
     c.fillStyle = this.color
-    c.fillRect(
-      this.position.x,
-      this.position.y,
-      this.width,
-      this.height
-    )
+    c.fillRect(this.position.x, this.position.y, this.width, this.height)
 
     // attack box
     if (this.isAttacking) {
       c.fillStyle = 'green'
-      c.fillRect(
-        this.attackBox.position.x,
-        this.attackBox.position.y,
-        this.attackBox.width,
-        this.attackBox.height
-      )
+      c.fillRect(this.attackBox.position.x, this.attackBox.position.y, this.attackBox.width, this.attackBox.height)
     }
   }
 
@@ -72,32 +59,21 @@ class Sprite {
 
 const player = new Sprite({
   position: {
-    x: 0,
-    y: 0
-  },
-  velocity: {
-    x: 0,
-    y: 0
-  },
-  offset: {
-    x: 0,
-    y: 0
+    x: 0, y: 0
+  }, velocity: {
+    x: 0, y: 0
+  }, offset: {
+    x: 0, y: 0
   }
 })
 
 const enemy = new Sprite({
   position: {
-    x: 400,
-    y: 100
-  },
-  velocity: {
-    x: 0,
-    y: 0
-  },
-  color: 'blue',
-  offset: {
-    x: -50,
-    y: 0
+    x: 400, y: 100
+  }, velocity: {
+    x: 0, y: 0
+  }, color: 'blue', offset: {
+    x: -50, y: 0
   }
 })
 
@@ -106,29 +82,17 @@ console.log(player)
 const keys = {
   a: {
     pressed: false
-  },
-  d: {
+  }, d: {
     pressed: false
-  },
-  ArrowRight: {
+  }, ArrowRight: {
     pressed: false
-  },
-  ArrowLeft: {
+  }, ArrowLeft: {
     pressed: false
   }
 }
 
 function rectangularCollision({ rectangle1, rectangle2 }) {
-  return (
-    rectangle1.attackBox.position.x + rectangle1.attackBox.width >=
-    rectangle2.position.x &&
-    rectangle1.attackBox.position.x <=
-    rectangle2.position.x + rectangle2.width &&
-    rectangle1.attackBox.position.y + rectangle1.attackBox.height >=
-    rectangle2.position.y &&
-    rectangle1.attackBox.position.y <=
-    rectangle2.position.y + rectangle2.height
-  )
+  return (rectangle1.attackBox.position.x + rectangle1.attackBox.width >= rectangle2.position.x && rectangle1.attackBox.position.x <= rectangle2.position.x + rectangle2.width && rectangle1.attackBox.position.y + rectangle1.attackBox.height >= rectangle2.position.y && rectangle1.attackBox.position.y <= rectangle2.position.y + rectangle2.height)
 }
 
 function animate() {
@@ -157,23 +121,19 @@ function animate() {
 
   // detect for collision
   if (rectangularCollision({
-      rectangle1: player,
-      rectangle2: enemy
-    }) &&
-    player.isAttacking
-  ) {
+    rectangle1: player, rectangle2: enemy
+  }) && player.isAttacking) {
     player.isAttacking = false
-    console.log('player attack successful')
+    enemy.health -= 20
+    document.querySelector('#enemyHealth').style.width = enemy.health + '%'
   }
 
   if (rectangularCollision({
-      rectangle1: enemy,
-      rectangle2: player
-    }) &&
-    enemy.isAttacking
-  ) {
+    rectangle1: enemy, rectangle2: player
+  }) && enemy.isAttacking) {
     enemy.isAttacking = false
-    console.log('enemy attack successful')
+    player.health -= 20
+    document.querySelector('#playerHealth').style.width = player.health + '%'
   }
 }
 
